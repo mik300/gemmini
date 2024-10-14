@@ -18,6 +18,8 @@ class Tile[T <: Data](inputType: T, outputType: T, accType: T, df: Dataflow.Valu
     val in_a        = Input(Vec(rows, inputType))
     val in_b        = Input(Vec(columns, outputType)) // This is the output of the tile next to it
     val in_d        = Input(Vec(columns, outputType))
+    val approximate_in = Input(UInt (8.W))
+    val precision_in = Input(UInt (14.W))
 
     val in_control  = Input(Vec(columns, new PEControl(accType)))
     val in_id       = Input(Vec(columns, UInt(log2Up(max_simultaneous_matmuls).W)))
@@ -26,6 +28,8 @@ class Tile[T <: Data](inputType: T, outputType: T, accType: T, df: Dataflow.Valu
     val out_a       = Output(Vec(rows, inputType))
     val out_c       = Output(Vec(columns, outputType))
     val out_b       = Output(Vec(columns, outputType))
+    val approximate_out = Output(Vec(columns, UInt (8.W)))
+    val precision_out = Output(Vec(columns, UInt (14.W)))
 
     val out_control = Output(Vec(columns, new PEControl(accType)))
     val out_id      = Output(Vec(columns, UInt(log2Up(max_simultaneous_matmuls).W)))
@@ -41,6 +45,24 @@ class Tile[T <: Data](inputType: T, outputType: T, accType: T, df: Dataflow.Valu
 
   val tile = Seq.fill(rows, columns)(Module(new PE(inputType, outputType, accType, df, max_simultaneous_matmuls)))
   val tileT = tile.transpose
+
+  // Broadcast 'approximate' vertically across the Tile
+    for (c <- 0 until columns) {
+    tileT(c).foldLeft(io.approximate_in) {
+      case (approximate_in, pe) =>
+        pe.io.approximate_in := approximate_in
+        pe.io.approximate_out
+    }
+  }
+
+  // Broadcast 'precision' vertically across the Tile
+    for (c <- 0 until columns) {
+    tileT(c).foldLeft(io.precision_in) {
+      case (precision_in, pe) =>
+        pe.io.precision_in := precision_in
+        pe.io.precision_out
+    }
+  }
 
   // TODO: abstract hori/vert broadcast, all these connections look the same
   // Broadcast 'a' horizontally across the Tile
@@ -113,6 +135,8 @@ class Tile[T <: Data](inputType: T, outputType: T, accType: T, df: Dataflow.Valu
     io.out_id(c) := tile(rows-1)(c).io.out_id
     io.out_last(c) := tile(rows-1)(c).io.out_last
     io.out_valid(c) := tile(rows-1)(c).io.out_valid
+    io.approximate_out(c) := tile(rows-1)(c).io.approximate_out
+    io.precision_out(c) := tile(rows-1)(c).io.precision_out
 
     io.out_b(c) := {
       if (tree_reduction) {

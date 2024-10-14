@@ -1,5 +1,7 @@
 #!/bin/bash
-
+cd software/gemmini-rocc-tests/
+./build.sh
+cd ../../
 ROOT="$PWD/"
 
 WAVEFORM="waveforms/waveform.vcd"

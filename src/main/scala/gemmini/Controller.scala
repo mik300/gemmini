@@ -230,6 +230,17 @@ class GemminiModule[T <: Data: Arithmetic, U <: Data, V <: Data]
   }
   */
 
+  // Instantiate the registers holding the approximate and precision settings
+  val approximate_reg = RegInit(0.U(8.W))
+  val precision_reg = RegInit(0.U(14.W))
+  when((io.cmd.bits.inst.funct === 0.U) && (io.cmd.bits.rs1(1,0) === 2.U) && (io.cmd.bits.rs1(6) === 1.U) && (io.cmd.bits.rs1(5,4) === 0.U)) // command is config_mvout and command is multiplier config and max_pool is disabled  
+  {
+    approximate_reg := io.cmd.bits.rs1(63, 56)
+    precision_reg := io.cmd.bits.rs1(55, 42)
+  }
+  
+
+
   load_controller.io.cmd.valid := reservation_station.io.issue.ld.valid
   reservation_station.io.issue.ld.ready := load_controller.io.cmd.ready
   load_controller.io.cmd.bits := reservation_station.io.issue.ld.cmd
@@ -244,6 +255,8 @@ class GemminiModule[T <: Data: Arithmetic, U <: Data, V <: Data]
   reservation_station.io.issue.ex.ready := ex_controller.io.cmd.ready
   ex_controller.io.cmd.bits := reservation_station.io.issue.ex.cmd
   ex_controller.io.cmd.bits.rob_id.push(reservation_station.io.issue.ex.rob_id)
+  ex_controller.io.approximate := approximate_reg
+  ex_controller.io.precision := precision_reg
 
   // Wire up scratchpad to controllers
   spad.module.io.dma.read <> load_controller.io.dma

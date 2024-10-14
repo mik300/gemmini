@@ -23,6 +23,9 @@ class Mesh[T <: Data : Arithmetic](inputType: T, outputType: T, accType: T,
     val in_a = Input(Vec(meshRows, Vec(tileRows, inputType)))
     val in_b = Input(Vec(meshColumns, Vec(tileColumns, inputType)))
     val in_d = Input(Vec(meshColumns, Vec(tileColumns, inputType)))
+    val approximate_in = Input(UInt (8.W))
+    val precision_in = Input(UInt (14.W))
+
     val in_control = Input(Vec(meshColumns, Vec(tileColumns, new PEControl(accType))))
     val in_id = Input(Vec(meshColumns, Vec(tileColumns, UInt(log2Up(max_simultaneous_matmuls).W)))) // The unique id of this particular matmul
     val in_last = Input(Vec(meshColumns, Vec(tileColumns, Bool())))
@@ -52,6 +55,19 @@ class Mesh[T <: Data : Arithmetic](inputType: T, outputType: T, accType: T,
       case (in_a, tile) =>
         tile.io.in_a := ShiftRegister(in_a, tile_latency+1)
         tile.io.out_a
+    }
+  }
+
+  
+  for (c <- 0 until meshRows) {
+    for (k <- 0 until meshColumns) {
+      mesh(c)(k).io.approximate_in := io.approximate_in
+    }
+  }
+
+  for (c <- 0 until meshRows) {
+    for (k <- 0 until meshColumns) {
+      mesh(c)(k).io.precision_in := io.precision_in
     }
   }
 

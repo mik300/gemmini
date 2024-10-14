@@ -22,8 +22,8 @@ class CmdFSM[T <: Data: Arithmetic, U <: Data, V <: Data]
   // module ports
   //==========================================================================
   val io = IO(new Bundle {
-    val cmd         = Flipped(Decoupled(new RoCCCommand))
-    val tiler       = Decoupled(new TilerCmd(LOG2_OTYPE_BITS))
+    val cmd         = Flipped(Decoupled(new RoCCCommand))       // consumer/input ready-valid interface
+    val tiler       = Decoupled(new TilerCmd(LOG2_OTYPE_BITS))  // producer / output ready-valid interface
     val flush_retry = Output(Bool())
     val flush_skip  = Output(Bool())
     val busy        = Output(Bool())

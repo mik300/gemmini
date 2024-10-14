@@ -16,7 +16,8 @@ class ExecuteController[T <: Data, U <: Data, V <: Data](xLen: Int, tagWidth: In
 
   val io = IO(new Bundle {
     val cmd = Flipped(Decoupled(new GemminiCmd(reservation_station_entries)))
-
+    val approximate = Input(UInt (8.W))
+    val precision = Input(UInt (14.W))
     val im2col = new Bundle {
       val req = Decoupled(new Im2ColReadReq(config))
       val resp = Flipped(Decoupled(new Im2ColReadResp(config)))
@@ -185,6 +186,9 @@ class ExecuteController[T <: Data, U <: Data, V <: Data](xLen: Int, tagWidth: In
   // Instantiate the actual mesh
   val mesh = Module(new MeshWithDelays(inputType, spatialArrayOutputType, accType, mesh_tag, dataflow, tree_reduction, tile_latency, mesh_output_delay,
     tileRows, tileColumns, meshRows, meshColumns, shifter_banks, shifter_banks))
+
+  mesh.io.approximate := io.approximate
+  mesh.io.precision := io.precision
 
   mesh.io.a.valid := false.B
   mesh.io.b.valid := false.B

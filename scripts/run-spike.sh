@@ -1,5 +1,7 @@
 #!/bin/bash
-
+cd software/gemmini-rocc-tests/
+./build.sh
+cd ../../
 help () {
   echo "Run a RISCV Gemmini program on Spike, our functional ISA simulator"
   echo

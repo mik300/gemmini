@@ -59,7 +59,9 @@ class MeshWithDelays[T <: Data: Arithmetic, U <: TagQueueTag with Data]
     val a = Flipped(Decoupled(A_TYPE))
     val b = Flipped(Decoupled(B_TYPE))
     val d = Flipped(Decoupled(D_TYPE))
-
+    val approximate = Input(UInt (8.W))
+    val precision = Input(UInt (14.W))
+    
     val req = Flipped(Decoupled(new MeshWithDelaysReq(accType, tagType.cloneType, block_size)))
 
     val resp = Valid(new MeshWithDelaysResp(outputType, meshColumns, tileColumns, block_size, tagType.cloneType))
@@ -165,6 +167,10 @@ class MeshWithDelays[T <: Data: Arithmetic, U <: TagQueueTag with Data]
 
   // Wire up mesh's IO to this module's IO
   val mesh = Module(new Mesh(inputType, outputType, accType, df, tree_reduction, tile_latency, max_simultaneous_matmuls, output_delay, tileRows, tileColumns, meshRows, meshColumns))
+
+
+    mesh.io.approximate_in := io.approximate
+    mesh.io.precision_in := io.precision
 
   // TODO wire only to *_buf here, instead of io.*.bits
   val a_shifter_in = WireInit(Mux(a_is_from_transposer, transposer_out.asTypeOf(A_TYPE), a_buf))
