@@ -21,7 +21,7 @@ else
 fi
 
 # For loop to run the script with multiple values of approximate level
-for ((i=255; i>=255; i--))
+for ((i=252; i>=250; i--))
 do
     # Modify the appr level in both files
     sed -i "s/gemmini_config_multiplier([0-9]\+, [0-9]\+)/gemmini_config_multiplier($i, 16383)/" "$file_path1"

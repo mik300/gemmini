@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
-#include "axx_mults_9x9/bw_mult_9_9_0.h"
+#include "axx_mults_9x9/bw_mult_9_9_3.h"
 
 #define IN_ROW_DIM 17
 #define IN_COL_DIM 17
