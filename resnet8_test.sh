@@ -1,10 +1,12 @@
 #!/bin/bash
 
-
+if [ $# -ne 2 ]; then
+    echo "Usage: $0 <verilator> or <spike>"
+    exit 1
+fi
 
 
 file_path1="software/gemmini-rocc-tests/bareMetalC/conv_layer.c"
-file_path2="convolution.c"
 
 
 #set #define IN_COL_DIM in convolution.c to the proper value depending on $1
@@ -20,7 +22,7 @@ do
     sed -i "s/gemmini_config_multiplier([0-9]\+, [0-9]\+)/gemmini_config_multiplier(255, 16383)/" "$file_path1"
 
     # This script can only be ran with verilator. spike simply doesn't work with the appr multiplier.
-    ./scripts/run-verilator.sh $1 > tmp.txt 2>/dev/null
+    ./scripts/run-spike.sh conv_layer > tmp.txt 2>/dev/null
 
     # Extract output_mat and save it in gemmini.output.txt
     ./clean_output.sh
