@@ -6,18 +6,18 @@ make -C bareMetalC -f /home/michael/chipyard/generators/gemmini/software/gemmini
 make -C imagenet -f /home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../imagenet/Makefile abs_top_srcdir=/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/.. XLEN=64 PREFIX=examples-imagenet src_dir=/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../imagenet RISCVTOOLS=@RISCVTOOLS@
 make -C transformers -f /home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../transformers/Makefile abs_top_srcdir=/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/.. XLEN=64 PREFIX=examples-transformers src_dir=/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../transformers RISCVTOOLS=@RISCVTOOLS@
 make -C mlps -f /home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../mlps/Makefile abs_top_srcdir=/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/.. XLEN=64 PREFIX=examples-mlps src_dir=/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../mlps RISCVTOOLS=@RISCVTOOLS@
-make[1]: Entering directory '/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/bareMetalC'
 make[1]: Entering directory '/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/imagenet'
+make[1]: Entering directory '/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/bareMetalC'
 make[1]: Entering directory '/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/transformers'
 make[1]: Entering directory '/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/mlps'
 make[1]: Nothing to be done for 'default'.
-make[1]: Leaving directory '/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/transformers'
-make[1]: Nothing to be done for 'default'.
 make[1]: Leaving directory '/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/imagenet'
 make[1]: Nothing to be done for 'default'.
-make[1]: Leaving directory '/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/mlps'
+make[1]: Leaving directory '/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/transformers'
 riscv64-unknown-elf-gcc  -DPREALLOCATE=1 -DMULTITHREAD=1 -mcmodel=medany -std=gnu99 -O2 -ffast-math -fno-common -fno-builtin-printf -fno-tree-loop-distribute-patterns -march=rv64gc -Wa,-march=rv64gc -lm -lgcc -I/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../riscv-tests -I/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../riscv-tests/env -I/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/.. -I/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../riscv-tests/benchmarks/common -DID_STRING= -DPRINT_TILE=0  -nostdlib -nostartfiles -static -T /home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../riscv-tests/benchmarks/common/test.ld -DBAREMETAL=1  /home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../bareMetalC/conv.c  -o conv-baremetal \
 	/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../riscv-tests/benchmarks/common/syscalls.c /home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../riscv-tests/benchmarks/common/crt.S 
+make[1]: Nothing to be done for 'default'.
+make[1]: Leaving directory '/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/mlps'
 riscv64-unknown-linux-gnu-gcc  -DPREALLOCATE=1 -DMULTITHREAD=1 -mcmodel=medany -std=gnu99 -O2 -ffast-math -fno-common -fno-builtin-printf -fno-tree-loop-distribute-patterns -march=rv64gc -Wa,-march=rv64gc -lm -lgcc -I/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../riscv-tests -I/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../riscv-tests/env -I/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/.. -I/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../riscv-tests/benchmarks/common -DID_STRING= -DPRINT_TILE=0  /home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../bareMetalC/conv.c  -o conv-linux
 riscv64-unknown-linux-gnu-gcc  -DPREALLOCATE=1 -DMULTITHREAD=1 -mcmodel=medany -std=gnu99 -O2 -ffast-math -fno-common -fno-builtin-printf -fno-tree-loop-distribute-patterns -march=rv64gc -Wa,-march=rv64gc -lm -lgcc -I/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../riscv-tests -I/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../riscv-tests/env -I/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/.. -I/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../riscv-tests/benchmarks/common -DID_STRING= -DPRINT_TILE=0  -static -DBAREMETAL=1  /home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/../bareMetalC/conv.c  -o conv-pk
 make[1]: Leaving directory '/home/michael/chipyard/generators/gemmini/software/gemmini-rocc-tests/build/bareMetalC'
@@ -33,59 +33,33 @@ Flatten weights...
 Gemmini conv...
 Gemmini conv took 2406 cycles
 output_mat:
-[-82,-66,-80,-61,-86,-95,-74,-97,-72,-70,-102,-75,-114,-107,-114,-95,-89,-108,-66]
-[-128,-128,-128,-128,-128,-111,-128,-128,-128,-106,-128,-99,-122,-128,-128,-128,-125,-128,-128]
-[-82,-82,-128,-109,-128,-115,-74,-128,-96,-58,-128,-127,-126,-55,-98,-128,-101,-104,-126]
-[-118,-126,-124,-125,-128,-128,-128,-128,-128,-128,-110,-87,-128,-107,-128,-128,-128,-120,-128]
-[-128,-128,-128,-128,-94,-128,-118,-128,-128,-128,-128,-103,-128,-128,-128,-111,-128,-128,-128]
-[-78,-102,-128,-113,-90,-128,-128,-109,-124,-110,-128,-79,-98,-103,-118,-95,-125,-88,-82]
-[-128,-128,-108,-113,-94,-87,-128,-128,-88,-90,-128,-123,-94,-115,-94,-115,-128,-104,-94]
-[-118,-110,-100,-128,-82,-111,-110,-117,-88,-98,-82,-95,-102,-67,-118,-119,-93,-128,-128]
-[-90,-90,-88,-93,-74,-39,-74,-73,-84,-46,-46,-59,-78,-67,-82,-55,-69,-76,-58]
-[-128,-128,-100,-117,-94,-115,-128,-109,-120,-74,-90,-111,-110,-91,-122,-128,-128,-96,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-115,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-91,-128,-125,-128,-128,-128,-128,-128,-128,-128,-123,-128,-128,-128]
-[-128,-126,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-102]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-127,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-113,-128,-128]
-[-66,-102,-100,-128,-126,-111,-86,-128,-116,-114,-70,-107,-128,-71,-102,-103,-128,-104,-114]
-[-128,-98,-120,-85,-118,-123,-106,-128,-112,-90,-90,-128,-114,-128,-128,-111,-93,-120,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-91,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-126]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-114,-110,-128,-128,-86,-91,-128,-128,-128,-70,-128,-107,-106,-63,-128,-111,-128,-104,-98]
-[-122,-94,-108,-113,-122,-119,-102,-101,-128,-86,-128,-128,-118,-111,-128,-119,-89,-128,-102]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-126,-128,-128,-128,-111,-128,-128,-109,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-115,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-106,-96,-128,-128,-83,-128,-128,-104,-114,-114,-128,-128,-128,-128,-128,-128,-116,-128]
-[-94,-90,-128,-128,-98,-115,-126,-117,-120,-122,-114,-128,-98,-91,-128,-128,-128,-104,-118]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-102,-128,-128,-126,-111,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-94,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-122,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-114,-90,-116,-121,-78,-119,-98,-113,-104,-110,-128,-127,-128,-115,-110,-111,-117,-100,-118]
-[-128,-114,-104,-128,-126,-111,-122,-105,-108,-66,-98,-107,-126,-75,-118,-67,-121,-68,-106]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-126,-128,-128,-128,-128,-128,-126]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-118,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-123,-128,-128,-128,-128,-128,-128,-128,-128,-128,-103,-128,-128,-126]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128]
-[-128,-114,-116,-128,-114,-87,-128,-128,-128,-94,-128,-128,-126,-91,-128,-111,-105,-128,-128]
-[-128,-128,-112,-128,-128,-127,-122,-128,-60,-106,-106,-119,-128,-119,-128,-128,-128,-108,-122]
-[-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-128,-12
+[-4,21,-7,1,-34,-13,-27,-1,-25,6,-28,-40,-59,-44,-43,-24,-27,-51,-13]
+[-14,-12,-15,-4,-40,25,-29,6,-40,38,-38,-22,17,9,-26,-18,19,-86,-28]
+[23,12,-30,19,-37,-35,-1,-7,-21,49,-34,-37,-2,53,12,-19,25,-37,-57]
+[-11,-6,-6,-7,-58,-55,-48,-16,-54,5,-29,-35,-61,3,-49,-55,-33,-35,-60]
+[-13,-37,-32,-30,-22,-55,-14,-22,-34,-27,-116,-45,-39,-37,-55,-23,-51,-113,-39]
+[10,-14,-51,20,0,-35,-17,34,-42,-22,-39,-25,21,2,-11,-11,-32,3,-20]
+[-28,-56,-35,0,-21,0,-67,10,-17,28,-67,-68,-7,-10,20,-8,-39,-12,-17]
+[-14,7,-19,-1,15,-4,-7,19,1,14,22,-32,0,10,-15,-19,-10,-78,-48]
+[-27,-25,-16,-15,-11,26,-13,-7,-18,35,22,-11,-26,3,-25,13,1,-44,-4]
+[-13,-45,4,30,7,-7,-53,-1,-5,48,50,-35,0,29,3,-31,5,41,-17]
+[7,45,-20,-11,3,-14,-49,-64,14,32,-59,-59,-29,103,1,-25,-11,-23,-12]
+[52,-18,16,34,-41,73,-44,40,10,41,4,-63,14,18,25,53,-3,-41,-41]
+[-18,13,-37,-3,-30,-36,-21,-52,-38,28,-122,-39,13,-6,-29,-34,-31,-17,61]
+[-38,-59,-112,-61,-91,-15,-52,-69,-47,-3,-112,-15,-57,-34,-80,-52,-62,-37,-36]
+[-31,-18,1,28,30,34,-2,-13,60,45,-80,-43,16,15,38,-21,-17,-100,-66]
+[-47,-6,-28,-4,8,23,-23,-2,-12,5,-38,-32,1,-7,-5,1,-26,-67,-24]
+[-63,-105,-20,-24,4,-28,-50,-50,25,22,-80,-29,19,-10,4,-6,17,-39,-22]
+[5,-44,-1,11,-49,-15,8,-41,-19,-15,-7,-26,-56,43,-22,18,-58,-48,3]
+[0,5,-20,48,-25,15,-18,12,5,43,16,-54,10,-67,-12,18,64,-34,12]
+[-15,-7,-47,-5,-12,-7,-32,-12,0,-15,-58,-43,-33,107,-90,-5,24,-79,-53]
+[2,-5,-10,7,-62,40,6,-6,-18,16,-71,-43,42,-8,-26,34,-7,-23,37]
+[-23,-85,41,11,3,-8,-29,-10,-5,-2,-35,-69,-43,-33,-53,8,0,-97,9]
+[-52,-47,-114,-50,-36,-34,-34,-50,-29,-5,-37,-58,-82,-14,-17,-11,-8,-74,-19]
+[46,-31,-39,-14,20,29,32,19,26,5,-41,-61,1,-44,-31,0,42,-32,-11]
+[-40,-16,-81,8,-38,-7,-68,13,1,7,-44,-57,-47,21,-65,-10,77,-46,-59]
+[-11,-7,-20,18,-46,6,-68,-30,4,-11,-54,-37,37,-14,-57,-44,28,-16,-11]
+[-7,-19,-53,-35,-6,-2,-63,-26,-21,30,-62,-55,-20,48,-62,11,-62,-43,-1]
+[33,28,3,20,-22,12,-16,19,-14,26,-31,-51,5,17,-20,-12,65,-36,7]
+[107,-9,27,51,37,36,27,66,64,68,26,-27,62,60,2,-3,78,-34,-8]
+[UART] UART0 is here (stdin/stdout).

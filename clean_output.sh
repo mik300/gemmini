@@ -1,9 +1,7 @@
 #!/bin/bash
 
-#!/bin/bash
-
 # Define the input file and output file
-input_file="output.txt"
+input_file="$1"
 output_file="gemmini_output.txt"
 
 # Find the line number where "output:" occurs
