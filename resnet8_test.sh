@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# -ne 2 ]; then
+if [ $# -ne 1 ]; then
     echo "Usage: $0 <verilator> or <spike>"
     exit 1
 fi
@@ -9,38 +9,44 @@ fi
 file_path1="software/gemmini-rocc-tests/bareMetalC/conv_layer.c"
 
 
-#set #define IN_COL_DIM in convolution.c to the proper value depending on $1
-
-sed -i "s/#define IN_COL_DIM [0-9]\+/#define IN_COL_DIM 17/" "$file_path1"
 
 
-
-# For loop to run the script with multiple values of approximate level
-for ((i=0; i<=8; i++))
+layers_list=(conv_1 layer1_0_conv1 layer1_0_conv2 layer2_0_conv1 layer2_0_conv2 layer3_0_conv1 layer3_0_conv2)
+scale=(157 276 155 221 304 382 452)
+# For loop to run the script for all layers of resnet8
+for ((i=0; i<7; i++))
 do
-    # Modify the appr level in both files
-    sed -i "s/gemmini_config_multiplier([0-9]\+, [0-9]\+)/gemmini_config_multiplier(255, 16383)/" "$file_path1"
+    # Modify the layer name in conv_layer.c
+    echo "${layers_list[$i]}"
+    python change_layer.py software/gemmini-rocc-tests/bareMetalC/conv_layer.c "${layers_list[$i]}"
+
+    #if it's layer layer2_0_conv1 or layer3_0_conv1 then STRIDE should be set to 2
+    if [[ "$i" -eq 3 || "$i" -eq 5 ]]; then
+        sed -i "s/const int STRIDE = [0-9]\+/const int STRIDE = 2/" "$file_path1"
+    else 
+        sed -i "s/const int STRIDE = [0-9]\+/const int STRIDE = 1/" "$file_path1"
+    fi
+
+    # Set scale depending on the layer
+    sed -i "s/NO_ACTIVATION, 1.0 \/ [0-9]\+, 0, 0, 0,/NO_ACTIVATION, 1.0 \/ ${scale[$i]}, 0, 0, 0,/" "$file_path1"
+
+    #if linear layer set BIAS to true
+    if [ "$i" -eq 7 ]; then
+        sed -i "s/const int NO_BIAS = [0-9]\+/const int NO_BIAS = 0/" "$file_path1"
+    else 
+        sed -i "s/const int NO_BIAS = [0-9]\+/const int NO_BIAS = 1/" "$file_path1"
+    fi
 
     # This script can only be ran with verilator. spike simply doesn't work with the appr multiplier.
     ./scripts/run-spike.sh conv_layer > tmp.txt 2>/dev/null
 
-    # Extract output_mat and save it in gemmini.output.txt
-    ./clean_output.sh
+    # Extract output_mat and save it in gemmini_output.txt
+    ./clean_output.sh tmp.txt
 
-    # Compile and run the golden model which is convolution.c, output_mat is stored in CPU_output.txt
-    gcc convolution.c -o conv && ./conv > CPU_output.txt
-
-    # Compare the results, if different exit with error message
-    if ! diff gemmini_output.txt CPU_output.txt >/dev/null; then
-        echo "gemmini_output.txt and CPU_output.txt are different, campaign aborted."
-        exit 1
-    fi
-
-    # If results are equal proceed with the script 
-    echo "Test with approximate = $i passed."
-    
-
+    mse=$(python evaluate_results.py --output_mat "$i")    
+    echo "MSE = $mse"
+    echo ""
 done
 #rm output.txt conv
-echo "Campaign is done. CPU and Gemmini output match."
+echo "Campaign is done."
 

@@ -1,4 +1,5 @@
 import numpy as np
+import argparse
 
 def read_matrix_from_file(filename):
     with open(filename, 'r') as f:
@@ -28,22 +29,29 @@ def evaluate_matrices(A, B):
     
     return mae, mse, rmse, max_ae
 
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--output_mat', default="1", type=str)
+    return parser.parse_args()
+
 # Main function
 def main():
+    args = get_args()
+    matrix_number = str(int(args.output_mat) + 1)
     # Read matrices from text files
     A = read_matrix_from_file('gemmini_output.txt')
-    B = read_matrix_from_file('verified_outputs/output_mat_1.txt')
+    B = read_matrix_from_file(f'verified_outputs/output_mat_{matrix_number}.txt')
     
     # Ensure both matrices have the same shape
     if A.shape != B.shape:
-        raise ValueError("The matrices must have the same shape for comparison.")
+        raise ValueError(f"The matrices in gemmini_output.txt {A.shape} and output_mat_{matrix_number}.txt {B.shape} must have the same shape for comparison.")
     
     # Evaluate matrices
     mae, mse, rmse, max_ae = evaluate_matrices(A, B)
     
     # Print results
     # print(f"Mean Absolute Error (MAE): {mae}")
-    print(f"Mean Squared Error (MSE): {mse}")
+    print(f"{mse}")
     # print(f"Root Mean Squared Error (RMSE): {rmse}")
     # print(f"Maximum Absolute Error (Max AE): {max_ae}")
 
