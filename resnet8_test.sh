@@ -43,8 +43,8 @@ do
     # Extract output_mat and save it in gemmini_output.txt
     ./clean_output.sh tmp.txt
 
-    mse=$(python evaluate_results.py --output_mat "$i")    
-    echo "MSE = $mse"
+    errors=$(python evaluate_results.py --output_mat "$i")    
+    echo "$errors"
     echo ""
 done
 #rm output.txt conv

@@ -50,10 +50,10 @@ def main():
     mae, mse, rmse, max_ae = evaluate_matrices(A, B)
     
     # Print results
-    # print(f"Mean Absolute Error (MAE): {mae}")
-    print(f"{mse}")
-    # print(f"Root Mean Squared Error (RMSE): {rmse}")
-    # print(f"Maximum Absolute Error (Max AE): {max_ae}")
+    print(f"Mean Absolute Error (MAE) = {mae}")
+    print(f"Mean Squared Error (MSE) = {mse}")
+    print(f"Root Mean Squared Error (RMSE) = {rmse}")
+    print(f"Maximum Absolute Error (Max AE) = {max_ae}")
 
 # Run the main function
 if __name__ == "__main__":
