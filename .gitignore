@@ -347,3 +347,4 @@ axx_mults_9x9
 .vscode
 verified_outputs/*
 tmp.txt
+gemmini_output.txt
