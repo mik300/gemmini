@@ -6,9 +6,6 @@ if [ $# -ne 1 ]; then
 fi
 
 
-
-
-
 layers_list=(conv_1 layer1_0_conv1 layer1_0_conv2 layer2_0_conv1 layer2_0_conv2 layer3_0_conv1 layer3_0_conv2 linear)
 scale=(157 276 155 221 304 382 452 49)
 # For loop to run the script for all layers of resnet8
@@ -24,7 +21,8 @@ do
         python change_layer.py software/gemmini-rocc-tests/bareMetalC/conv_layer.c "${layers_list[$i]}"
     fi
 
-    
+    sed -i "s/const bool FAST = [0-9]\+/const bool FAST = 1/" "$file_path"
+
     #if it's layer layer2_0_conv1 or layer3_0_conv1 then STRIDE should be set to 2
     if [[ "$i" -eq 3 || "$i" -eq 5 ]]; then
         sed -i "s/const int STRIDE = [0-9]\+/const int STRIDE = 2/" "$file_path"
@@ -49,10 +47,7 @@ do
         ./scripts/run-"$1".sh conv_layer > tmp.txt
     fi
 
-    # Extract output_mat and save it in gemmini_output.txt
-    ./clean_output.sh tmp.txt
-
-    errors=$(python evaluate_results.py --output_mat "$i")    
+    errors=$(python extract_errors.py --input_file tmp.txt)    
     echo "$errors"
     echo ""
 

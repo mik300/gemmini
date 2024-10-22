@@ -21,13 +21,10 @@ def evaluate_matrices(A, B):
     # Mean Squared Error
     mse = np.mean((A - B) ** 2)
     
-    # Root Mean Squared Error
-    rmse = np.sqrt(mse)
-    
     # Maximum Absolute Error
     max_ae = np.max(np.abs(A - B))
     
-    return mae, mse, rmse, max_ae
+    return mae, mse, max_ae
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -47,12 +44,11 @@ def main():
         raise ValueError(f"The matrices in gemmini_output.txt {A.shape} and output_mat_{matrix_number}.txt {B.shape} must have the same shape for comparison.")
     
     # Evaluate matrices
-    mae, mse, rmse, max_ae = evaluate_matrices(A, B)
+    mae, mse, max_ae = evaluate_matrices(A, B)
     
     # Print results
     print(f"Mean Absolute Error (MAE) = {mae}")
     print(f"Mean Squared Error (MSE) = {mse}")
-    print(f"Root Mean Squared Error (RMSE) = {rmse}")
     print(f"Maximum Absolute Error (Max AE) = {max_ae}")
 
 # Run the main function
