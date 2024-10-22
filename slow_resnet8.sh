@@ -7,7 +7,7 @@ fi
 
 
 layers_list=(conv_1 layer1_0_conv1 layer1_0_conv2 layer2_0_conv1 layer2_0_conv2 layer3_0_conv1 layer3_0_conv2 linear)
-scale=(157 276 155 221 304 382 452 49)
+scale=(157 276 155 221 304 382 452 150)
 # For loop to run the script for all layers of resnet8
 for ((i=0; i<8; i++))
 do
@@ -49,7 +49,7 @@ do
 
     # Extract output_mat and save it in gemmini_output.txt
     ./clean_output.sh tmp.txt
-    echo "${layers_list[$i]}:"
+    echo "${layers_list[$i]}"
     errors=$(python evaluate_results.py --output_mat "$i")    
     echo "$errors"
     echo ""

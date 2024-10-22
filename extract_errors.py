@@ -10,7 +10,11 @@ def extract_error_lines(file_path):
                 # Check if the line starts with one of the specified error strings
                 if (line.startswith("Mean Absolute Error") or
                     line.startswith("Mean Squared Error") or
-                    line.startswith("Maximum Absolute Error")):
+                    line.startswith("Maximum Absolute Error") or
+                    line.startswith("Gemmini conv took") or 
+                    line.startswith("Gemmini matmul took") or
+                    line.startswith("Flattening weights took") or
+                    line.startswith("Error compuation took")):
                     # Print the matching line
                     print(line.strip())
     except FileNotFoundError:
