@@ -24,6 +24,8 @@ else
     file_path="software/gemmini-rocc-tests/bareMetalC/linear_layer.c"
 fi
 
+sed -i "s/const bool FAST = [0-9]\+/const bool FAST = 0/" "$file_path"
+
 #if it's layer layer2_0_conv1 or layer3_0_conv1 then STRIDE should be set to 2
 if [[ "$1" == "layer2_0_conv1" || "$1" == "layer3_0_conv1" ]]; then
     sed -i "s/const int STRIDE = [0-9]\+/const int STRIDE = 2/" "$file_path"
@@ -37,7 +39,7 @@ fi
 
 
 # For loop to run the script with multiple values of approximate level
-for ((i=45; i<=51; i+=1))
+for ((i=150; i<=165; i+=1))
 do
     
     sed -i "s/NO_ACTIVATION, 1.0 \/ [0-9]\+,/NO_ACTIVATION, 1.0 \/ $i,/" "$file_path"

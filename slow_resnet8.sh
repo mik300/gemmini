@@ -12,7 +12,6 @@ scale=(157 276 155 221 304 382 452 150)
 for ((i=0; i<8; i++))
 do
 
-    
     if [ "$i" -eq 7 ]; then
         file_path="software/gemmini-rocc-tests/bareMetalC/linear_layer.c"
     else 
@@ -22,7 +21,8 @@ do
     fi
 
     sed -i "s/const bool FAST = [0-9]\+/const bool FAST = 0/" "$file_path"
-    
+    sed -i "s/gemmini_config_multiplier(255 - appr_level\[[0-9]\+\]/gemmini_config_multiplier(255 - appr_level\[$i\]/" "$file_path"
+
     #if it's layer layer2_0_conv1 or layer3_0_conv1 then STRIDE should be set to 2
     if [[ "$i" -eq 3 || "$i" -eq 5 ]]; then
         sed -i "s/const int STRIDE = [0-9]\+/const int STRIDE = 2/" "$file_path"
