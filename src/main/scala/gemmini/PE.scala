@@ -13,26 +13,6 @@ class PEControl[T <: Data : Arithmetic](accType: T) extends Bundle {
 
 }
 
-/*
-class mul_9x9_signed_bw[T <: Data](inputType: T, outputType: T) (implicit ev: Arithmetic[T]) extends RawModule {
-    import ev._
-    val io = IO(new Bundle {
-      val a = Input(inputType)
-      val b = Input(inputType)
-      val res_mask = Input(UInt(14.W))
-      val appr_mask = Input(UInt(8.W))
-      val res = Output(outputType)
-    })
-
-    io.res := DontCare
-    when(io.appr_mask <= 64.U && io.res_mask <= 4096.U) {
-      io.res := io.a*io.b
-    }.elsewhen(io.appr_mask <= 64.U && io.res_mask > 4096.U) { 
-      io.res := io.a+io.b
-    }
-  }
-*/
-
 class mul_signed_bw extends BlackBox with HasBlackBoxResource {
     val io = IO(new Bundle {
       val a = Input(SInt(9.W))
@@ -53,7 +33,7 @@ class mul_9x9_signed_bw[T <: Data](inputType: T, dType: T) extends RawModule {
       val appr_mask = Input(UInt(8.W))
       val res = Output(dType)
     })
-    val a_inter = Cat(Fill(1, io.a(7)), io.a).asSInt // a_inter is a sign extended a (9 bits)
+    val a_inter = Cat(Fill(1, io.a(7)), io.a).asSInt // a_inter is a sign extended (9 bits)
     val b_inter = Cat(Fill(1, io.b(7)), io.b).asSInt
 
     val mul_signed_bw_nodule = Module(new mul_signed_bw) 
@@ -76,20 +56,6 @@ class MacUnit[T <: Data](inputType: T, cType: T, dType: T) (implicit ev: Arithme
     val in_c  = Input(cType)
     val out_d = Output(dType)
   })
-
-  //io.out_d := io.in_a*io.in_b
-  /*
-  io.out_d := DontCare
-  when(io.approximate <= 128.U && io.precision <= 8192.U) { 
-    io.out_d := io.in_c.mac(io.in_a, io.in_b)
-  }.elsewhen(io.approximate <= 128.U && io.precision > 8192.U) {
-    io.out_d := io.in_c + io.in_a + io.in_b
-  }.elsewhen(io.approximate <= 256.U && io.precision <= 8192.U) {
-    io.out_d := io.in_c + io.in_a - io.in_b
-  }.elsewhen(io.approximate < 256.U && io.precision > 8192.U) {
-    io.out_d := io.in_a + io.in_b
-  }
-  */
 
   //io.out_d := io.in_c.mac(io.in_a, io.in_b)
   //io.out_d := io.in_c + io.in_a + io.in_b

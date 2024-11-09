@@ -348,3 +348,6 @@ axx_mults_9x9
 verified_outputs/*
 tmp.txt
 gemmini_output.txt
+scales.txt
+results.txt
+plot_scale.txt
